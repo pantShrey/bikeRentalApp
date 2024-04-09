@@ -8,7 +8,7 @@ interface RouterProps {
 }
 const Home = ({navigation}: RouterProps) => {
   return (
-    <View >
+    <View style = {styles.container} >
       <Text style = {styles.container}>Home</Text>
       <Button onPress={()=>{Firebase_Auth.signOut()}} title='Logout'/>
     </View>
