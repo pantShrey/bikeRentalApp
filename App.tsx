@@ -1,20 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './app/screens/Login';
+import Home from './app/screens/Home';
+import { User, onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { Firebase_Auth } from './firebaseConfig';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const InsideStack = createNativeStackNavigator();
+
+function InsideLayout() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <InsideStack.Navigator>
+      <InsideStack.Screen name='Home' component={Home} options={{headerShown: false}} />
+    </InsideStack.Navigator>
+  );
+}
+export default function App() {
+  const [user,SetUser] = useState <User|null> (null);
+
+  useEffect(() => {
+   onAuthStateChanged(Firebase_Auth, (user) => {
+    if(user){
+      if(user.emailVerified){
+        
+        SetUser(user);
+      }else{
+        // If the user is not verified redirect it to login page
+        Firebase_Auth.signOut().then(()=>{
+          alert('Kindly Verify Your Email');
+          SetUser(null);
+        });
+      }
+    }
+   }) 
+  },[])
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Login'>
+        {user ? <Stack.Screen name='Inside' component={InsideLayout} options={{headerShown: false}} /> 
+        : <Stack.Screen name='Login' component={Login} options={{headerShown: false}} />
+        }
+      </Stack.Navigator>
+        
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
