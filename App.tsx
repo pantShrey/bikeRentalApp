@@ -6,6 +6,8 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { Firebase_Auth } from './firebaseConfig';
 import Signup from './app/screens/Signup';
+import RentBike from './app/screens/RentBike';
+import ListStore from './app/screens/ListStore';
 
 
 const Stack = createNativeStackNavigator();
@@ -17,6 +19,8 @@ function InsideLayout() {
     
     <InsideStack.Navigator>
       <InsideStack.Screen name='Home' component={Home} options={{headerShown: false}} />
+      <InsideStack.Screen name='RentBike' component={RentBike} options={{headerShown: false}} />
+      <InsideStack.Screen name='ListStore' component={ListStore} options={{headerShown: false}} />
     </InsideStack.Navigator>
   );
 }
